@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>享爱密码 · 爱有其方，享爱所有</title>
+<meta name="description" content="享爱密码：面向伴侣沟通、亲子沟通、长辈心理与关系信任议题的心理咨询预约与对话平台。">
+<meta name="theme-color" content="#F8D8B8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="享爱密码">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="assets/icon-192.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <div class="stage">
+    <div class="device" id="device">
+      <div class="demo-ribbon" id="demoRibbon">
+        <span class="demo-dot"></span>
+        <span>云端版 · 咨询师为演示资料，真实支付通道未接入</span>
+      </div>
+
+      <header class="app-header" id="appHeader"></header>
+
+      <main class="app-main" id="appMain" tabindex="-1"></main>
+
+      <nav class="tabbar" id="tabbar" aria-label="主导航"></nav>
+
+      <button class="install-fab" id="installFab" hidden type="button">
+        <span class="install-icon">↓</span> 安装到主屏幕
+      </button>
+    </div>
+  </div>
+
+  <div class="modal-root" id="modalRoot"></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@tencent-ai/workbuddy-cloud-sdk@dev/lib/index.global.js"></script>
+  <script src="cloud-config.js"></script>
+  <script src="legal-model.js"></script>
+  <script src="app-cloud.js"></script>
+</body>
+</html>

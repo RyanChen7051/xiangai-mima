@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>享爱密码 · 静态交互原型（旧版）</title>
+<meta name="theme-color" content="#F8D8B8">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="assets/icon-192.png">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <div class="stage">
+    <div class="device" id="device">
+      <div class="demo-ribbon" id="demoRibbon">
+        <span class="demo-dot"></span>
+        <span>静态交互原型（旧版） · 数据仅在本机内存，不连接云端</span>
+      </div>
+      <header class="app-header" id="appHeader"></header>
+      <main class="app-main" id="appMain" tabindex="-1"></main>
+      <nav class="tabbar" id="tabbar" aria-label="主导航"></nav>
+      <button class="install-fab" id="installFab" hidden type="button">
+        <span class="install-icon">↓</span> 安装到主屏幕
+      </button>
+    </div>
+  </div>
+  <div class="modal-root" id="modalRoot"></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>

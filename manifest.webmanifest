@@ -1,0 +1,36 @@
+{
+  "id": "./",
+  "name": "享爱密码 · 关系与家庭心理咨询",
+  "short_name": "享爱密码",
+  "description": "爱有其方，享爱所有。面向伴侣沟通、亲子沟通、长辈心理与关系信任议题的心理咨询预约与对话平台。",
+  "lang": "zh-CN",
+  "dir": "ltr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FFF8F0",
+  "theme_color": "#F8D8B8",
+  "categories": ["health", "lifestyle", "social"],
+  "icons": [
+    { "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    {
+      "name": "找咨询师",
+      "short_name": "找咨询师",
+      "description": "按主题浏览可预约的咨询师",
+      "url": "./#explore",
+      "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "我的咨询",
+      "short_name": "我的咨询",
+      "description": "查看订单与对话记录",
+      "url": "./#sessions",
+      "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
