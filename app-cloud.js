@@ -792,7 +792,7 @@
         break;
       case 'consent-later': modalRoot.innerHTML = ''; S.pendingAction = null; break;
       case 'consent-mask': if (target === el) { modalRoot.innerHTML = ''; S.pendingAction = null; } break;
-      case 'official-close': modalRoot.innerHTML = ''; break;
+      case 'official-close': if (target === el || el.tagName === 'BUTTON') modalRoot.innerHTML = ''; break;
       default: break;
     }
   }
