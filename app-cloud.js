@@ -17,6 +17,30 @@
     publishableKey: cfg.publishableKey
   });
 
+  /* ---- 镜像站（GitHub Pages）----
+     云端服务按 Origin 精确匹配：只有官方发布域名与本地开发能调用账号/数据库。
+     镜像站保留完整浏览体验（演示目录 + 合规中心），涉及账号与交易的动作统一引导到官方网址。 */
+  const OFFICIAL_URL = 'https://xiangai-mima.app.workbuddy.host/?sharecode=TLF2EWSPYX';
+  const CLOUD_ORIGIN = new URL(cfg.endpoint).origin;
+  const IS_LOCAL = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+  const IS_MIRROR = !IS_LOCAL && location.origin !== CLOUD_ORIGIN;
+  const MIRROR_BLOCKED = ['go-login', 'go-desk', 'go-ops', 'to-booking', 'create-order',
+    'enter-chat', 'open-conv', 'refresh', 'refresh-chat', 'send', 'send-otp',
+    'verify-otp', 'redeem-code', 'confirm-payment', 'signout', 'withdraw'];
+  const MIRROR_COUNSELORS = [
+    { id: 1, slug: 'c1', display_name: '示例咨询师 · 林', initials: '林', tint: 'linear-gradient(145deg,#F0A468,#C85E27)', topics: ['couple','trust'], modes: ['文字','语音','视频'], price_cents: 19900, intro: '演示资料：擅长把卡住的对话拆成可以慢慢说的小段落。', tags: ['伴侣沟通','关系与信任','冲突降温'], verified: false },
+    { id: 2, slug: 'c2', display_name: '示例咨询师 · 周', initials: '周', tint: 'linear-gradient(145deg,#E9B27E,#B8703C)', topics: ['couple','parent'], modes: ['文字','视频'], price_cents: 23900, intro: '演示资料：关注家庭里的角色分工与情绪传递。', tags: ['伴侣沟通','亲子沟通','家庭系统'], verified: false },
+    { id: 3, slug: 'c3', display_name: '示例咨询师 · 沈', initials: '沈', tint: 'linear-gradient(145deg,#EDAF86,#A95C3A)', topics: ['parent','elder'], modes: ['文字','语音'], price_cents: 17900, intro: '演示资料：关注代际之间的表达差异与照护压力。', tags: ['亲子沟通','长辈心理','照护压力'], verified: false },
+    { id: 4, slug: 'c4', display_name: '示例咨询师 · 许', initials: '许', tint: 'linear-gradient(145deg,#F2A97A,#C2522F)', topics: ['trust','couple'], modes: ['文字','语音','视频'], price_cents: 26900, intro: '演示资料：处理信任破裂后的边界、选择与去留议题。', tags: ['关系与信任','边界设定','决策梳理'], verified: false },
+    { id: 5, slug: 'c5', display_name: '示例咨询师 · 陈', initials: '陈', tint: 'linear-gradient(145deg,#E7B485,#976A45)', topics: ['elder','any'], modes: ['语音','视频'], price_cents: 18900, intro: '演示资料：关注失落感、孤独与自我价值。', tags: ['长辈心理','初次梳理','情绪陪伴'], verified: false },
+    { id: 6, slug: 'c6', display_name: '示例咨询师 · 何', initials: '何', tint: 'linear-gradient(145deg,#EFA377,#B74E2C)', topics: ['any','trust','parent'], modes: ['文字','语音'], price_cents: 15900, intro: '演示资料：第一次咨询常用，帮来访者把问题说清楚。', tags: ['初次梳理','关系与信任','亲子沟通'], verified: false }
+  ];
+  const MIRROR_PLANS = [
+    { plan_id: 'single', model: 'per_session', title: '单次咨询 · 50 分钟', description: '先聊一次，看看是否合适', sessions: 1, amount_cents: 19900, currency: 'CNY', active: true, source_note: '默认假设：按次付费解锁一次对话，待与《鬼影追追追》计费模型对齐' },
+    { plan_id: 'three', model: 'package', title: '3 次陪伴套餐', description: '适合需要连续梳理的议题', sessions: 3, amount_cents: 53900, currency: 'CNY', active: true, source_note: '默认假设：套餐，待与《鬼影追追追》计费模型对齐' },
+    { plan_id: 'six', model: 'package', title: '6 次深入套餐', description: '适合关系重建类长期议题', sessions: 6, amount_cents: 99900, currency: 'CNY', active: true, source_note: '默认假设：套餐，待与《鬼影追追追》计费模型对齐' }
+  ];
+
   const svg = (d) => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + '</svg>';
   const ICON = {
     home: svg('<path d="M3 10.6 12 3.2l9 7.4"/><path d="M5.6 9.4V20h12.8V9.4"/><path d="M10 20v-5.4h4V20"/>'),
@@ -90,6 +114,25 @@
     if (S.uid && conv.visitor_id === S.uid) return 'visitor';
     return myCounselorIds().indexOf(String(conv.counselor_id)) >= 0 ? 'counselor' : 'visitor';
   };
+
+  function officialSheet() {
+    modalRoot.innerHTML =
+      '<div class="modal-mask" data-act="official-close"><div class="sheet official-sheet" data-stop="1">' +
+      '<h2>这项功能请在官方网址使用</h2>' +
+      '<p class="sheet-lead">当前打开的是 GitHub Pages 镜像站。</p>' +
+      '<p class="small muted">云端账号、订单和咨询对话按来源域名做精确校验，因此只在官方网址开放。镜像站可以完整浏览主题、咨询师资料与合规中心。</p>' +
+      crisisNotice() +
+      '<a class="btn block" href="' + OFFICIAL_URL + '">打开完整版</a>' +
+      '<button class="btn ghost block sm" data-act="official-close">继续浏览镜像站</button>' +
+      '</div></div>';
+  }
+  function showMirrorBanner() {
+    const r = $('#demoRibbon');
+    if (!r) return;
+    r.innerHTML = '<span class="demo-dot"></span>' +
+      '<span>镜像站 · 账号与咨询请用官方网址</span>' +
+      '<a class="mirror-link" href="' + OFFICIAL_URL + '">完整版 →</a>';
+  }
 
   function toast(msg) {
     const el = $('#toast');
@@ -686,6 +729,7 @@
 
   async function handle(act, el, target) {
     const id = el.dataset.id;
+    if (IS_MIRROR && MIRROR_BLOCKED.indexOf(act) >= 0) { officialSheet(); return; }
     switch (act) {
       case 'tab': switchTab(id); break;
       case 'back': back(); break;
@@ -748,6 +792,7 @@
         break;
       case 'consent-later': modalRoot.innerHTML = ''; S.pendingAction = null; break;
       case 'consent-mask': if (target === el) { modalRoot.innerHTML = ''; S.pendingAction = null; } break;
+      case 'official-close': modalRoot.innerHTML = ''; break;
       default: break;
     }
   }
@@ -782,20 +827,29 @@
     if (TAB_VIEWS.indexOf(h) >= 0 || DEEP_VIEWS.indexOf(h) >= 0) S.view = h;
     render();
 
-    try {
-      const { data: session } = await cloud.auth.getSession();
-      S.session = session || null;
-      S.user = (session && session.user) || null;
-      S.uid = S.user ? (S.user.id || S.user.sub || '') : '';
-      await loadCatalog();
-      if (S.session) await loadMyData();
+    if (IS_MIRROR) {
+      S.mirror = true;
+      S.counselors = MIRROR_COUNSELORS.slice();
+      S.plans = MIRROR_PLANS.slice();
+      S.catalogLoaded = true;
+      showMirrorBanner();
       render();
-    } catch (err) {
-      S.error = '云端初始化失败：' + (err && err.message ? err.message : '请检查网络与应用域名');
-      render();
+    } else {
+      try {
+        const { data: session } = await cloud.auth.getSession();
+        S.session = session || null;
+        S.user = (session && session.user) || null;
+        S.uid = S.user ? (S.user.id || S.user.sub || '') : '';
+        await loadCatalog();
+        if (S.session) await loadMyData();
+        render();
+      } catch (err) {
+        S.error = '云端初始化失败：' + (err && err.message ? err.message : '请检查网络与应用域名');
+        render();
+      }
     }
 
-    if (!agreed) setTimeout(() => { modalRoot.innerHTML = consentSheetHTML(); }, 420);
+    if (!agreed && !IS_MIRROR) setTimeout(() => { modalRoot.innerHTML = consentSheetHTML(); }, 420);
 
     if ('serviceWorker' in navigator && location.protocol.indexOf('http') === 0) {
       navigator.serviceWorker.register('sw.js').catch(() => { /* 忽略 */ });

@@ -602,3 +602,15 @@ img { display: block; max-width: 100%; }
 .legal-refs { list-style: none; margin-left: -14px; }
 .legal-refs ul { padding-left: 16px; }
 .legal-refs li { font-size: 10.5px; line-height: 1.6; color: var(--muted); word-break: break-word; }
+
+/* ---------- GitHub Pages 镜像站引导 ---------- */
+.mirror-link {
+  margin-left: auto; flex: none; white-space: nowrap;
+  font-size: 11px; font-weight: 800; color: #B5521B;
+  text-decoration: underline; text-underline-offset: 2px;
+}
+.official-sheet p.small { margin: 0 0 14px; line-height: 1.65; }
+.official-sheet .btn {
+  display: flex; align-items: center; justify-content: center;
+  text-decoration: none; margin-bottom: 9px;
+}
