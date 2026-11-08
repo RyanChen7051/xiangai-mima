@@ -104,6 +104,8 @@
   const tabbar = $('#tabbar');
   const modalRoot = $('#modalRoot');
   const device = $('#device');
+  const homeFab = $('#homeFab');
+  const updateFab = $('#updateFab');
   const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const money = (cents) => '¥' + (Number(cents || 0) / 100).toFixed(0);
   const counselorById = (id) => S.counselors.find(c => String(c.id) === String(id));
@@ -246,7 +248,7 @@
     const show = TAB_VIEWS.indexOf(S.view) >= 0;
     tabbar.style.display = show ? 'flex' : 'none';
     device.classList.toggle('no-tabs', !show);
-    main.style.paddingBottom = show ? '' : '24px';
+    main.style.paddingBottom = show ? '' : 'calc(140px + env(safe-area-inset-bottom))';
     if (!show) return;
     tabbar.innerHTML = TABS.map(t =>
       '<button class="tab ' + (S.view === t.id ? 'active' : '') + '" data-act="tab" data-id="' + t.id + '">' +
@@ -578,6 +580,7 @@
   };
   function render() {
     renderHeader(); renderTabs();
+    if (homeFab) homeFab.hidden = (S.view === 'home');
     main.innerHTML = (VIEWS[S.view] || viewHome)();
     if (S.view === 'chat') main.scrollTop = main.scrollHeight;
     if (S.error && ['login', 'desk', 'ops'].indexOf(S.view) < 0) {
@@ -733,6 +736,8 @@
     switch (act) {
       case 'tab': switchTab(id); break;
       case 'back': back(); break;
+      case 'go-home': switchTab('home'); break;
+      case 'do-update': doUpdate(); break;
       case 'go-about': go('about'); break;
       case 'go-privacy': go('privacy'); break;
       case 'go-compliance': go('compliance'); break;
@@ -816,6 +821,70 @@
     }
   });
 
+  /* ---------------- 版本更新（对齐 PMApp 移动版） ----------------
+     常驻「更新」按钮：点击主动检查新版本并刷新；
+     发版后新 SW 自动 SKIP_WAITING 接管，controllerchange 触发一次刷新。 */
+  let swReg = null;
+  let swRefreshing = false;
+  let swBusy = false;
+
+  function markUpdateAvailable() {
+    if (updateFab) updateFab.classList.add('has-update');
+  }
+  function initServiceWorker() {
+    if (!('serviceWorker' in navigator) || location.protocol.indexOf('http') !== 0) return;
+    const hadController = !!navigator.serviceWorker.controller;
+
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      // 首次安装（原本没有 controller）不刷新，避免无意义的重载循环
+      if (swRefreshing || !hadController) return;
+      swRefreshing = true;
+      location.reload();
+    });
+
+    navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' })
+      .then((reg) => {
+        swReg = reg;
+        if (reg.waiting) markUpdateAvailable();
+        reg.addEventListener('updatefound', () => {
+          const worker = reg.installing;
+          if (!worker) return;
+          worker.addEventListener('statechange', () => {
+            if (worker.state !== 'installed') return;
+            if (navigator.serviceWorker.controller) {
+              markUpdateAvailable();
+              try { worker.postMessage('SKIP_WAITING'); } catch (e) { /* 忽略 */ }
+            }
+          });
+        });
+        // 启动即检查 + 周期检查 + 切回前台检查（发版尽快生效）
+        reg.update().catch(() => {});
+        setInterval(() => { reg.update().catch(() => {}); }, 60000);
+        document.addEventListener('visibilitychange', () => {
+          if (!document.hidden) reg.update().catch(() => {});
+        });
+      })
+      .catch(() => { /* 离线时忽略 */ });
+  }
+  function doUpdate() {
+    if (swBusy || !updateFab) return;
+    swBusy = true;
+    updateFab.classList.add('busy');
+    const sw = navigator.serviceWorker;
+    const reload = () => { location.reload(); };
+    if (swReg && swReg.waiting) {
+      updateFab.textContent = '🔄 更新中…';
+      try { swReg.waiting.postMessage('SKIP_WAITING'); } catch (e) { reload(); return; }
+      setTimeout(reload, 3000); // 兜底：3 秒仍未接管则强制刷新
+      return;
+    }
+    updateFab.textContent = '🔄 检查中…';
+    if (swReg && swReg.update) swReg.update().then(reload).catch(reload);
+    else if (sw && sw.getRegistration) {
+      sw.getRegistration().then((r) => r && r.update ? r.update().then(reload).catch(reload) : reload()).catch(reload);
+    } else reload();
+  }
+
   /* ---------------- 启动 ---------------- */
   async function boot() {
     let agreed = false;
@@ -851,9 +920,7 @@
 
     if (!agreed && !IS_MIRROR) setTimeout(() => { modalRoot.innerHTML = consentSheetHTML(); }, 420);
 
-    if ('serviceWorker' in navigator && location.protocol.indexOf('http') === 0) {
-      navigator.serviceWorker.register('sw.js').catch(() => { /* 忽略 */ });
-    }
+    initServiceWorker();
     setInterval(async () => {
       if (S.view !== 'chat' || !S.activeConv || !S.session) return;
       await loadMessages(S.activeConv.id);
@@ -869,13 +936,21 @@
 
   let deferredPrompt = null;
   const installFab = $('#installFab');
-  window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; installFab.hidden = false; });
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault(); deferredPrompt = e; installFab.hidden = false;
+    if (updateFab) updateFab.classList.add('with-install');
+  });
   installFab.addEventListener('click', async () => {
     if (!deferredPrompt) return;
     deferredPrompt.prompt(); await deferredPrompt.userChoice;
     deferredPrompt = null; installFab.hidden = true;
+    if (updateFab) updateFab.classList.remove('with-install');
   });
-  window.addEventListener('appinstalled', () => { installFab.hidden = true; toast('享爱密码已添加到主屏幕'); });
+  window.addEventListener('appinstalled', () => {
+    installFab.hidden = true;
+    if (updateFab) updateFab.classList.remove('with-install');
+    toast('享爱密码已添加到主屏幕');
+  });
   window.addEventListener('hashchange', () => {
     const h = location.hash.replace('#', '');
     if ((TAB_VIEWS.indexOf(h) >= 0 || DEEP_VIEWS.indexOf(h) >= 0) && S.view !== h) {

@@ -32,6 +32,17 @@
       <button class="install-fab" id="installFab" hidden type="button">
         <span class="install-icon">↓</span> 安装到主屏幕
       </button>
+
+      <!-- 常驻悬浮操作：与 PMApp 移动版一致（回首页 / 检查更新） -->
+      <button class="home-fab" id="homeFab" hidden type="button" data-act="go-home"
+              aria-label="回首页" title="回首页">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3 10.6 12 3.2l9 7.4"/><path d="M5.6 9.4V20h12.8V9.4"/><path d="M10 20v-5.4h4V20"/>
+        </svg>
+      </button>
+      <button class="update-fab" id="updateFab" type="button" data-act="do-update"
+              aria-label="检查更新并刷新" title="检查更新并刷新">🔄 更新</button>
     </div>
   </div>
 

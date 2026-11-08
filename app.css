@@ -148,7 +148,7 @@ img { display: block; max-width: 100%; }
   overflow-y: auto;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
-  padding: 18px 16px calc(96px + env(safe-area-inset-bottom));
+  padding: 18px 16px calc(140px + env(safe-area-inset-bottom));
   scroll-behavior: smooth;
 }
 .view { animation: rise .32s ease both; }
@@ -559,7 +559,7 @@ img { display: block; max-width: 100%; }
 .tab-icon svg { width: 22px; height: 22px; display: block; }
 .li-icon svg { width: 17px; height: 17px; display: block; }
 .bubble-row .avatar { width: 32px; height: 32px; font-size: 14px; border-radius: 10px; }
-.device.no-tabs .app-main { padding-bottom: 24px; }
+.device.no-tabs .app-main { padding-bottom: calc(140px + env(safe-area-inset-bottom)); }
 
 @media (prefers-reduced-motion: reduce) {
   .view, .hero-logo, .sheet, .modal-mask { animation: none !important; }
@@ -614,3 +614,36 @@ img { display: block; max-width: 100%; }
   display: flex; align-items: center; justify-content: center;
   text-decoration: none; margin-bottom: 9px;
 }
+
+/* ---------- 常驻悬浮操作（对齐 PMApp 移动版：更新 / 回首页） ---------- */
+.home-fab, .update-fab {
+  position: absolute;
+  bottom: calc(78px + env(safe-area-inset-bottom));
+  z-index: 8;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff;
+  box-shadow: 0 6px 20px rgba(164, 78, 30, .30), 0 2px 6px rgba(120, 68, 30, .18);
+  transition: transform .18s ease, opacity .18s ease;
+  -webkit-user-select: none; user-select: none;
+}
+.home-fab[hidden], .update-fab[hidden], .install-fab[hidden] { display: none !important; }
+.home-fab {
+  left: 14px; width: 46px; height: 46px; border-radius: 50%;
+  background: linear-gradient(135deg, #E4833C 0%, #C4551F 100%);
+}
+.home-fab svg { width: 22px; height: 22px; }
+.update-fab {
+  right: 14px; min-height: 42px; padding: 9px 16px; border-radius: 999px;
+  background: linear-gradient(135deg, #E4793A 0%, #B84A17 100%);
+  font-size: 12.5px; font-weight: 700; letter-spacing: .01em; white-space: nowrap;
+}
+.home-fab:active, .update-fab:active { transform: scale(.93); }
+.update-fab.busy { opacity: .72; pointer-events: none; }
+.update-fab.has-update::after {
+  content: ''; position: absolute; top: -2px; right: -2px;
+  width: 10px; height: 10px; border-radius: 50%;
+  background: #E63946; border: 2px solid #fff;
+}
+/* 出现「安装到主屏幕」提示时，让更新按钮上移一层，两者不重叠；
+   安装提示本身保持贴近底栏，不遮挡页脚说明文字 */
+.update-fab.with-install { bottom: calc(128px + env(safe-area-inset-bottom)); }
