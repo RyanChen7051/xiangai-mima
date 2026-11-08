@@ -176,7 +176,7 @@
     };
     if (isTab) {
       header.innerHTML =
-        '<div class="hd-brand"><img src="assets/logo-badge-640.png" alt="享爱密码徽章">' +
+        '<div class="hd-brand"><img src="assets/logo-badge-320.png" alt="享爱密码徽章">' +
         '<div><div class="hd-title">享爱密码</div><div class="hd-sub">爱有其方，享爱所有</div></div></div>' +
         '<span class="hd-spacer"></span>' +
         '<button class="hd-action" data-act="switch-role">' +
@@ -212,7 +212,7 @@
 
     return '<section class="view">' +
       '<div class="hero">' +
-        '<img class="hero-logo" src="assets/logo-badge-640.png" alt="享爱密码圆形徽章：双手捧起心形钥匙">' +
+        '<img class="hero-logo" src="assets/logo-badge-320.png" alt="享爱密码圆形徽章：双手捧起心形钥匙">' +
         '<h1>享爱密码</h1><p class="slogan">爱有其方，享爱所有</p>' +
         '<p class="lead">有些话，在家里说不出口。你可以先从这里开始，慢慢说给我们听。</p>' +
       '</div>' +
@@ -516,7 +516,7 @@
   function viewAbout() {
     return '<section class="view">' +
       '<div class="card tinted center" style="padding:22px">' +
-        '<img src="assets/logo-badge-640.png" alt="享爱密码徽章" style="width:96px;height:96px;margin:0 auto 10px;border-radius:50%">' +
+        '<img src="assets/logo-badge-320.png" alt="享爱密码徽章" style="width:96px;height:96px;margin:0 auto 10px;border-radius:50%">' +
         '<div class="strong" style="font-size:18px;letter-spacing:.08em">享爱密码</div>' +
         '<div class="small muted">爱有其方，享爱所有</div></div>' +
 

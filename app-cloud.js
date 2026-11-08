@@ -230,7 +230,7 @@
     };
     if (isTab) {
       header.innerHTML =
-        '<div class="hd-brand"><img src="assets/logo-badge-640.png" alt="享爱密码徽章">' +
+        '<div class="hd-brand"><img src="assets/logo-badge-320.png" alt="享爱密码徽章">' +
         '<div><div class="hd-title">享爱密码</div><div class="hd-sub">爱有其方，享爱所有</div></div></div>' +
         '<span class="hd-spacer"></span>' +
         '<button class="hd-action" data-act="go-desk">' + (isCounselor() ? '咨询师后台' : '咨询师入口') + '</button>';
@@ -261,7 +261,7 @@
       '<span class="t-body"><span class="t-name">' + esc(t.name) + '</span>' +
       '<span class="t-desc">' + esc(t.desc) + '</span></span></button>').join('');
     return '<section class="view">' +
-      '<div class="hero"><img class="hero-logo" src="assets/logo-badge-640.png" alt="享爱密码圆形徽章">' +
+      '<div class="hero"><img class="hero-logo" src="assets/logo-badge-320.png" alt="享爱密码圆形徽章">' +
       '<h1>享爱密码</h1><p class="slogan">爱有其方，享爱所有</p>' +
       '<p class="lead">有些话，在家里说不出口。你可以先从这里开始，慢慢说给我们听。</p></div>' +
       '<div class="section-head"><h2>现在，你最想聊的是？</h2></div><div class="topic-grid">' + topics + '</div>' +
@@ -477,7 +477,7 @@
     const kind = S.loginTab;
     const sent = !!S.pendingOtp;
     return '<section class="view"><div class="card center" style="padding:22px">' +
-      '<img src="assets/logo-badge-640.png" alt="享爱密码徽章" style="width:80px;height:80px;margin:0 auto 10px;border-radius:50%">' +
+      '<img src="assets/logo-badge-320.png" alt="享爱密码徽章" style="width:80px;height:80px;margin:0 auto 10px;border-radius:50%">' +
       '<div class="strong" style="font-size:17px">登录 / 注册</div>' +
       '<p class="small muted" style="margin:4px 0 0">验证码登录，新用户自动创建账号</p></div>' +
       '<div class="card"><div class="row" style="gap:8px;margin-bottom:12px">' +
@@ -561,7 +561,7 @@
 
   function viewAbout() {
     return '<section class="view"><div class="card tinted center" style="padding:22px">' +
-      '<img src="assets/logo-badge-640.png" alt="享爱密码徽章" style="width:96px;height:96px;margin:0 auto 10px;border-radius:50%">' +
+      '<img src="assets/logo-badge-320.png" alt="享爱密码徽章" style="width:96px;height:96px;margin:0 auto 10px;border-radius:50%">' +
       '<div class="strong" style="font-size:18px;letter-spacing:.08em">享爱密码</div><div class="small muted">爱有其方，享爱所有</div></div>' +
       nonMedicalNotice() + crisisNotice() +
       '<div class="section-head"><h2>系统状态</h2></div><div class="card"><p class="small muted" style="margin:0;line-height:1.8">' +

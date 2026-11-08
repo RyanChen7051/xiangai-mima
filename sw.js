@@ -1,7 +1,7 @@
 /* 享爱密码 PWA · Service Worker
    策略：同源 GET 走 network-first，离线回退缓存；导航请求离线回退 index.html。
    跨域请求一律不缓存。 */
-const CACHE_NAME = 'xiangai-mima-v4';
+const CACHE_NAME = 'xiangai-mima-v5';
 const PRECACHE = [
   './',
   './index.html',
@@ -11,13 +11,9 @@ const PRECACHE = [
   './cloud-config.js',
   './legal-model.js',
   './app-cloud.js',
-  './assets/logo-badge-640.png',
+  './assets/logo-badge-320.png',
   './manifest.webmanifest',
-  './assets/logo-clean.png',
-  './assets/icon-192.png',
-  './assets/icon-512.png',
-  './assets/icon-maskable-512.png',
-  './assets/apple-touch-icon.png'
+  './assets/icon-192.png'
 ];
 
 self.addEventListener('install', (event) => {
